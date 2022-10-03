@@ -30,7 +30,7 @@ public class Ejercicio03 {
 		int gradoN;
 		
 		do { //Si el grado introducido del polinomio es menor a 0 volvera a solicitarlo
-			System.out.print(string);
+			System.out.print(string);//E
 			gradoN = Integer.parseInt(teclado.nextLine());
 		} while (gradoN <= 0);
 			
