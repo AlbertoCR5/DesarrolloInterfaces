@@ -9,7 +9,7 @@ public class Usuario {
 	public static final String APELLIDOS_USUARIO = "Prieto";
 	
 	Random idUsuarioAleatorio = new Random();
-	int idUsuario;
+	int idUsuario = idUsuarioAleatorio.nextInt(999999999)+1;
 	String email, nombre, apellidos;
 	
 	public Usuario(int idUsuario) {
@@ -21,11 +21,15 @@ public class Usuario {
 	}
 
 	public Usuario(int idUsuario, String email, String nombre, String apellidos) {
-		
-		this.idUsuario = idUsuarioAleatorio.nextInt(999999999)+1;
+	
 		this.email = email;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
+		this.idUsuario++;
+	}
+
+	public int getIdUsuario() {
+		return idUsuario;
 	}
 
 	public String getEmail() {

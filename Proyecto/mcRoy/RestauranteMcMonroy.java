@@ -12,27 +12,35 @@ public class RestauranteMcMonroy {
 	public static final String HORARIO_CIERRE_RESTAURANTE =  "01:00";
 	
 	Random idRestauranteAleatorio = new Random();
-	int idRestaurante; 
+	int idRestaurante = idRestauranteAleatorio.nextInt(Integer.MAX_VALUE)+1; 
 	String nombre, direccion, telefono, descripcion, horaApertura, horaCierre;
 	static int pedido;
 	
 	public RestauranteMcMonroy(int idRestaurante, String nombre, String direccion) {
 
-		this.idRestaurante = idRestauranteAleatorio.nextInt(Integer.MAX_VALUE)+1;
 		this.nombre = nombre;
 		this.direccion = direccion;
+		this.idRestaurante++;
 	}
 	
 	public RestauranteMcMonroy(int idRestaurante, String nombre, String direccion, String telefono, String descripcion,
 			String horaApertura, String horaCierre) {
 
-		this.idRestaurante = idRestauranteAleatorio.nextInt(Integer.MAX_VALUE)+1;
 		this.nombre = nombre;
 		this.direccion = direccion;
 		this.telefono = telefono;
 		this.descripcion = descripcion;
 		this.horaApertura = horaApertura;
 		this.horaCierre = horaCierre;
+		this.idRestaurante++;
+	}
+
+	public int getIdRestaurante() {
+		return idRestaurante;
+	}
+
+	public void setIdRestaurante(int idRestaurante) {
+		this.idRestaurante = idRestaurante;
 	}
 
 	public String getNombre() {
