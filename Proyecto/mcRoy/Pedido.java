@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class Pedido extends RestauranteMcMonroy {
+public class Pedido {
 
 	static Calendar fecha = new GregorianCalendar(); // Importamos los utiles CALENDAR y GregorianCalendar para obtener el anio actual y usarlo como constante
 	static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -27,10 +27,14 @@ public class Pedido extends RestauranteMcMonroy {
 	boolean esServicioMesa;
 	static int idPedido = 0;
 	static int idPedidoPantalla = 0;
+	double precioPedido = 0;
 	
 	
-	public Pedido(String nombre, String direccion, String horaActual, int dia, int mes, int anio, boolean esParaLLevar, boolean esServicioMesa) {
-		super(nombre, direccion);
+	public Pedido() {
+
+	}
+
+	public Pedido(String horaActual, int dia, int mes, int anio, boolean esParaLLevar, boolean esServicioMesa) {
 		
 		this.horaActual = horaActual;
 		this.dia = dia;
@@ -81,5 +85,19 @@ public class Pedido extends RestauranteMcMonroy {
 	public boolean isEsServicioMesa() {
 		return esServicioMesa;
 	}
+
+	@Override
+	public String toString() {
+		return "Pedido [horaActual=" + horaActual + ", dia=" + dia + ", mes=" + mes + ", anio=" + anio
+				+ ", esParaLlevar=" + esParaLlevar + ", esServicioMesa=" + esServicioMesa + ", precioPedido="
+				+ precioPedido + "]";
+	}
 	
+	public double annadirProducto(double precioProducto) {
+		
+		precioPedido = precioPedido + precioProducto;
+		RestauranteMcMonroy.totalFacturado = RestauranteMcMonroy.totalFacturado + precioPedido;
+		
+		return precioPedido;	
+	}
 }

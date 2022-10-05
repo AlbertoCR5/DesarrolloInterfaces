@@ -10,9 +10,9 @@ public enum CategoriaMcRoyMenus {
 	MCROYALDELUXE("McRoy Royal Deluxe", 7.45),
 	MCROYWRAP("McRoy Wrap Chicken & Bacon", 8.00),
 	MCROYNUGGETS("McRoy Nuggets 9uds.", 7.40),
-	MCROY4YOUSIMPLE("Asignature F Bash Script", 3.30),
-	MCROY4YOUDOBLE("Asignature F Bash Script", 4.40),
-	MCROY4YOUTRIPLE("Asignature F Bash Script", 5.50);
+	MCROY4YOUSIMPLE("Menu Simple Mediano", 3.30),
+	MCROY4YOUDOBLE("Menu Doble Mediano", 4.40),
+	MCROY4YOUTRIPLE("Menu Triple Mediano", 5.50);
 
 	private final String nombre;
 	private final double precio;

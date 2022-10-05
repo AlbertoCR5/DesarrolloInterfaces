@@ -22,7 +22,7 @@ public class Usuario {
 		this.apellidos = APELLIDOS_USUARIO;
 	}
 
-	public Usuario(String email, String nombre, String apellidos) throws mcRoyException {
+	public Usuario(String email, String nombre, String apellidos) throws McRoyException {
 	
 		setEmail(email);
 		this.nombre = nombre;
@@ -38,10 +38,10 @@ public class Usuario {
 		return email;
 	}
 
-	public void setEmail(String email) throws mcRoyException {
+	public void setEmail(String email) throws McRoyException {
 		
 		if (!(ValidarMail(email))) {
-			throw new mcRoyException("El email introducido no es valido");
+			throw new McRoyException("El email introducido no es valido");
 		}
 		this.email = email;
 	}
