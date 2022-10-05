@@ -1,16 +1,18 @@
 package mcRoy;
 
-import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Usuario {
 	
+    // Patron para validar el email
+	public static Pattern PATRON = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 	public static final String EMAIL_USUARIO = "Rafael.prieto@iescristobaldemonroy.es";
 	public static final String NOMBRE_USUARIO = "Rafael";
 	public static final String APELLIDOS_USUARIO = "Prieto";
-	
-	Random idUsuarioAleatorio = new Random();
-	int idUsuario = idUsuarioAleatorio.nextInt(999999999)+1;
-	String email, nombre, apellidos;
+
+	int idUsuario = 1;
+	private String email, nombre, apellidos;
 	
 	public Usuario(int idUsuario) {
 
@@ -20,12 +22,12 @@ public class Usuario {
 		this.apellidos = APELLIDOS_USUARIO;
 	}
 
-	public Usuario(int idUsuario, String email, String nombre, String apellidos) {
+	public Usuario(String email, String nombre, String apellidos) throws mcRoyException {
 	
-		this.email = email;
+		setEmail(email);
 		this.nombre = nombre;
 		this.apellidos = apellidos;
-		this.idUsuario++;
+		idUsuario++;
 	}
 
 	public int getIdUsuario() {
@@ -36,7 +38,11 @@ public class Usuario {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public void setEmail(String email) throws mcRoyException {
+		
+		if (!(ValidarMail(email))) {
+			throw new mcRoyException("El email introducido no es valido");
+		}
 		this.email = email;
 	}
 
@@ -56,5 +62,15 @@ public class Usuario {
 		this.apellidos = apellidos;
 	}
 
+	@Override
+	public String toString() {
+		return "Usuario " + idUsuario;
+	}
+
+	public static boolean ValidarMail(String email) {
+    
+        Matcher mather = PATRON.matcher(email);
+        return mather.find();
+    }
 	
 }

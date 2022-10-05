@@ -12,18 +12,18 @@ public class RestauranteMcMonroy {
 	public static final String HORARIO_CIERRE_RESTAURANTE =  "01:00";
 	
 	Random idRestauranteAleatorio = new Random();
-	int idRestaurante = idRestauranteAleatorio.nextInt(Integer.MAX_VALUE)+1; 
+	static int idRestaurante = 1; 
 	String nombre, direccion, telefono, descripcion, horaApertura, horaCierre;
 	static int pedido;
 	
-	public RestauranteMcMonroy(int idRestaurante, String nombre, String direccion) {
-
+	public RestauranteMcMonroy(String nombre, String direccion) {
+		
 		this.nombre = nombre;
 		this.direccion = direccion;
-		this.idRestaurante++;
+		idRestaurante++;
 	}
 	
-	public RestauranteMcMonroy(int idRestaurante, String nombre, String direccion, String telefono, String descripcion,
+	public RestauranteMcMonroy(String nombre, String direccion, String telefono, String descripcion,
 			String horaApertura, String horaCierre) {
 
 		this.nombre = nombre;
@@ -32,15 +32,11 @@ public class RestauranteMcMonroy {
 		this.descripcion = descripcion;
 		this.horaApertura = horaApertura;
 		this.horaCierre = horaCierre;
-		this.idRestaurante++;
+		idRestaurante++;
 	}
 
 	public int getIdRestaurante() {
 		return idRestaurante;
-	}
-
-	public void setIdRestaurante(int idRestaurante) {
-		this.idRestaurante = idRestaurante;
 	}
 
 	public String getNombre() {
@@ -102,17 +98,152 @@ public class RestauranteMcMonroy {
 				+ "\n" + descripcion;
 	}
 	
-	public void mostrarProductos() {
+	public String mostrarCategorias() {
+	
+		StringBuilder sbCategorias = new StringBuilder();
+		
+		for (int i = 0; i < Producto.CATEGORIAS.length; i++) {
+			sbCategorias.append("(" + (i+1) + ")" + Producto.CATEGORIAS[i] + "\n");
+		}
+		
+		return sbCategorias.toString();
+	}
+	
+	public String mostrarProductos(int categoriaSeleccionada) {
+		
+		StringBuilder sbProductos = new StringBuilder();
+		int i = 1;
+		switch (categoriaSeleccionada - 1) {
+		
+		case 0:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaMcRoyMenus producto : CategoriaMcRoyMenus.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+			
+		case 1:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaMcRoySandwiches producto : CategoriaMcRoySandwiches.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+			
+		case 2:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaMonroyStyle producto : CategoriaMonroyStyle.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+		
+		case 3:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaAsignatureCollection producto : CategoriaAsignatureCollection.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+			
+		case 4:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaGrandMcRoyExtreme producto : CategoriaGrandMcRoyExtreme.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+			
+		case 5:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaMcRoyEnsaladas producto : CategoriaMcRoyEnsaladas.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+			
+		case 6:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaHappyMealRoy producto : CategoriaHappyMealRoy.values()) {
+
+				if (producto.equals(CategoriaHappyMealRoy.PRINCIPAL)) {
+					
+					for (int j = 0; j < Producto.PRINCIPAL_HAPPYMEALROY.length; j++) {
+						sbProductos.append("(" + (i+1) + ")" + Producto.PRINCIPAL_HAPPYMEALROY[i] + "\n");
+					}
+				}
+				
+				if (producto.equals(CategoriaHappyMealRoy.COMPLEMENTO)) {
+					for (int j = 0; j < Producto.COMPLEMENTO_HAPPYMEALROY.length; j++) {
+						sbProductos.append("(" + (i+1) + ")" + Producto.COMPLEMENTO_HAPPYMEALROY[i] + "\n");
+					}
+				}
+				
+				if (producto.equals(CategoriaHappyMealRoy.BEBIDA)) {
+					for (int j = 0; j < Producto.BEBIDA_HAPPYMEALROY.length; j++) {
+						sbProductos.append("(" + (i+1) + ")" + Producto.BEBIDA_HAPPYMEALROY[i] + "\n");
+					}
+				}
+				
+				if (producto.equals(CategoriaHappyMealRoy.POSTRE)) {
+					for (int j = 0; j < Producto.POSTRE_HAPPYMEALROY.length; j++) {
+						sbProductos.append("(" + (i+1) + ")" + Producto.POSTRE_HAPPYMEALROY[i] + "\n");
+					}
+				}
+			}
+			break;
+			
+		case 7:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaMcRoyMenus producto : CategoriaMcRoyMenus.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+			
+		case 8:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaMcRoyMenus producto : CategoriaMcRoyMenus.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+			
+		case 9:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaMcRoyMenus producto : CategoriaMcRoyMenus.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+			
+		case 10:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaMcRoyMenus producto : CategoriaMcRoyMenus.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+		
+		case 11:
+			sbProductos.append(Producto.CATEGORIAS[categoriaSeleccionada - 1] + ":" + "\n");
+			for (CategoriaMcRoyMenus producto : CategoriaMcRoyMenus.values()) {
+				sbProductos.append("(" + i + ")" + producto.getNombre() + " " + producto.getPrecio() + "€" + "\n");
+				i++;
+			}
+			break;
+		default:
+			break;
+		}
+		
+		
+		return descripcion;
 		
 	}
 	
 	public void realizarPedido() {
 		
 	}
-
-	
-	
-	
-	
 
 }
