@@ -1,7 +1,5 @@
 package mcRoy;
 
-import java.util.Random;
-
 public class RestauranteMcMonroy {
 	
 	public static final String NOMBRE_RESTAURANTE = "MCMonroy's";
@@ -9,9 +7,8 @@ public class RestauranteMcMonroy {
 	public static final String TELEFONO_RESTAURANTE = "954 10 09 11";
 	public static final String DESCRIPCION_RESTAURANTE = "Cadena de restaurante de comida rapida de larga trayectoria famosa por sus hamburguesas, patatas fritas e instalar franquicias en lugares donde hay institutos";
 	public static final String HORARIO_APERTURA_RESTAURANTE =  "12:00";
-	public static final String HORARIO_CIERRE_RESTAURANTE =  "01:00";
-	
-	Random idRestauranteAleatorio = new Random();
+	public static final String HORARIO_CIERRE_RESTAURANTE =  "01:00";	
+
 	static int idRestaurante = 1; 
 	String nombre, direccion, telefono, descripcion, horaApertura, horaCierre;
 	static int pedido;
