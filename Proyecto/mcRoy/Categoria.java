@@ -7,7 +7,7 @@ public class Categoria {
 			"Postres y Helados", "Bebidas", "Complementos", "Salsas"};
 	
 	String nombreCategoria;
-
+	
 	public Categoria(String nombreCategoria) {
 		this.nombreCategoria = nombreCategoria;
 	}
@@ -19,5 +19,20 @@ public class Categoria {
 	public void setNombre(String nombreCategoria) {
 		this.nombreCategoria = nombreCategoria;
 	}
+
+	@Override
+	public String toString() {
+		return "Categoria [nombreCategoria=" + nombreCategoria + "]";
+	}
 	
+	public String mostrarCategorias() {
+		
+		StringBuilder sbCategorias = new StringBuilder();
+		
+		for (int i = 0; i < CATEGORIAS.length; i++) {
+			sbCategorias.append("(" + (i+1) + ")" + Producto.CATEGORIAS[i] + "\n");
+		}
+		
+		return sbCategorias.toString();
+	}
 }

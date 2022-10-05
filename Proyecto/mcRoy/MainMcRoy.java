@@ -8,7 +8,8 @@ public class MainMcRoy {
 	
 	public static void main(String[] args) {
 		
-		
+		Categoria categoria;
+		Producto producto;
 		RestauranteMcMonroy restaurante;
 		Usuario usuario = null;
 		Pedido pedido = new Pedido();
@@ -46,15 +47,19 @@ public class MainMcRoy {
 		int seleccionarProducto;
 		try {
 			do {
-				mostrarMensaje(restaurante.mostrarCategorias());
+				mostrarMensaje(categoria.mostrarCategorias());
 				seleccionarCategoria = comprobarEntero("Seleccione categoria");
 			} while (seleccionarCategoria <= 0 || seleccionarCategoria > Producto.CATEGORIAS.length);
 			
+			String nombreProductos[] = new String[producto.mostrarProductos(seleccionarCategoria).length()];
+			for (int i = 0; i < nombreProductos.length; i++) {
+				nombreProductos[i] = producto.mostrarProductos(seleccionarCategoria);
+			}
 			do {
-				mostrarMensaje(restaurante.mostrarProductos(seleccionarCategoria));
+				mostrarMensaje(producto.mostrarProductos(seleccionarCategoria));
 				seleccionarProducto = comprobarEntero("Seleccione producto");
-			} while (seleccionarProducto < 0 || seleccionarProducto > restaurante.mostrarProductos(seleccionarCategoria).length());
-			//pedido.annadirProducto(restaurante.mostrarProductos(seleccionarCategoria));
+			} while (seleccionarProducto < 0 || seleccionarProducto > producto.mostrarProductos(seleccionarCategoria).length());
+			pedido.annadirProducto(producto.mostrarProductos(seleccionarCategoria));
 		} catch (McRoyException e) {
 			e.printStackTrace();
 		}
