@@ -15,7 +15,7 @@ public class Pedido {
 	// Constantes
 	public static final int ANIO_ACTUAL = fecha.get(Calendar.YEAR); // Anio actual
 	public static final int MES_ACTUAL = fecha.get(Calendar.MONTH); // Mes actual
-	public static final int DIA_ACTUAL = fecha.get(Calendar.DAY_OF_YEAR); // Dia actual
+	public static final int DIA_ACTUAL = fecha.get(Calendar.DATE); // Dia actual
 	public static final String HORA_ACTUAL = dateFormat.format(hora); // Hora Actual
 
 	// Atributos	
@@ -28,29 +28,36 @@ public class Pedido {
 	static int idPedido = 0;
 	static int idPedidoPantalla = 0;
 	double precioPedido = 0;
+	StringBuilder cadenaPedido = new StringBuilder();
 	
 	
 	public Pedido() {
-
+		
+		this.horaActual = HORA_ACTUAL;
+		this.dia = DIA_ACTUAL;
+		this.mes = MES_ACTUAL;
+		this.anio = ANIO_ACTUAL;
+		idPedido++;
+		idPedidoPantalla++;
 	}
 
 	public Pedido(String horaActual, int dia, int mes, int anio, boolean esParaLLevar, boolean esServicioMesa) {
 		
-		this.horaActual = horaActual;
-		this.dia = dia;
-		this.mes = mes;
-		this.anio = anio;
+		this.horaActual = HORA_ACTUAL;
+		this.dia = DIA_ACTUAL;
+		this.mes = MES_ACTUAL;
+		this.anio = ANIO_ACTUAL;
 		this.esParaLlevar = esParaLLevar;
 		this.esServicioMesa = esServicioMesa;
 		idPedido++;
-		idPedidoPantalla++;
+		idPedidoPantalla++;	
 	}
 
 	public static int getIdPedido() {
 		return idPedido;
 	}
 	
-	public static int getIdPedidoPantalla() {
+	public int getIdPedidoPantalla() {
 		return idPedidoPantalla;
 	}
 
@@ -59,7 +66,6 @@ public class Pedido {
 		if (idPedidoPantalla == 100) {
 			idPedidoPantalla = 0;
 		}		
-		Pedido.idPedidoPantalla = idPedidoPantalla;
 	}
 
 	public String getHoraActual() {
@@ -88,15 +94,19 @@ public class Pedido {
 
 	@Override
 	public String toString() {
-		return "Pedido [horaActual=" + horaActual + ", dia=" + dia + ", mes=" + mes + ", anio=" + anio
-				+ ", esParaLlevar=" + esParaLlevar + ", esServicioMesa=" + esServicioMesa + ", precioPedido="
-				+ precioPedido + "]";
+		return "Num Pedido: " + idPedido +  "\n               " + dia + "/" + mes + "/" + anio
+				+ " " + horaActual + "\n\nArticulo\n" + cadenaPedido + "\nTotal                     " 
+				+ String.format("%.2f", precioPedido) + "€" + "\n           DISFRUTA";
 	}
 	
-	public double annadirProducto(double precioProducto) {
+	public double annadirProducto(double precioProducto, String nombreProducto) {
+		
+		cadenaPedido.append(nombreProducto + "\n");
 		
 		precioPedido = precioPedido + precioProducto;
 		RestauranteMcMonroy.totalFacturado = RestauranteMcMonroy.totalFacturado + precioPedido;
+		
+		cadenaPedido.toString();
 		
 		return precioPedido;	
 	}
