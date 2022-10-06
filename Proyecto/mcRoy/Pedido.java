@@ -101,7 +101,7 @@ public class Pedido {
 	
 	public double annadirProducto(double precioProducto, String nombreProducto) {
 		
-		cadenaPedido.append(nombreProducto + "\n");
+		cadenaPedido.append(nombreProducto + "     " + precioProducto + "\n");
 		
 		precioPedido = precioPedido + precioProducto;
 		RestauranteMcMonroy.totalFacturado = RestauranteMcMonroy.totalFacturado + precioPedido;
