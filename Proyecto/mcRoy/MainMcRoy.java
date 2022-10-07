@@ -11,51 +11,52 @@ public class MainMcRoy {
 		RestauranteMcMonroy restaurante;
 		Usuario usuario = null;
 		Pedido pedido = new Pedido();
-		boolean esCliente = solicitarTipo("Bienvenido a McMonroy" + "\n" + "(1)Eres cliente" + "\n" + "(2)Eres inversor" + "\n");
+		boolean esCliente = solicitarTipo("Bienvenido a McMonroy" + "\n" + "(1)Eres cliente" + "\n" + "(2)No Eres cliente" + "\n");
 
 		if (!esCliente) {
 			restaurante = new RestauranteMcMonroy(solicitarString("Introduce nombre restaurante: "),
-					solicitarString("Introduce direccion restaurante: "));
+					solicitarString("Introduce direccion restaurante: "), comprobarEntero("Establece un codigo de seguridad: "));
+			mostrarMensaje("Restaurante creado correctamente" + "\n" + restaurante.toString());
 		} else {
-			restaurante = new RestauranteMcMonroy(RestauranteMcMonroy.NOMBRE_RESTAURANTE,
-					RestauranteMcMonroy.DIRECCION_RESTAURANTE, RestauranteMcMonroy.TELEFONO_RESTAURANTE,
-					RestauranteMcMonroy.DESCRIPCION_RESTAURANTE, RestauranteMcMonroy.HORARIO_APERTURA_RESTAURANTE,
-					RestauranteMcMonroy.HORARIO_CIERRE_RESTAURANTE);
-		}
+			restaurante = new RestauranteMcMonroy();
+			
+			mostrarMensaje("Bienvenido a " + restaurante.getNombre());
+			
+			boolean esUsuarioRegistrado = solicitarTipo("(1)Usuario registrado" + "\n" + "(2)Nuevo Cliente" + "\n");
 
-		mostrarMensaje("Bienvenido a " + restaurante.getNombre());
-		boolean esUsuarioRegistrado = solicitarTipo("(1)Usuario registrado" + "\n" + "(2)Nuevo Cliente" + "\n");
-
-		if (esUsuarioRegistrado) {
-			mostrarMensaje("Introduce identificador de usuario");
-			usuario = new Usuario(comprobarEntero());
-		} else {
-			try {
-				usuario = new Usuario(solicitarString("Introduce E-mail: "), solicitarString("Introduce nombre: "),
-						solicitarString("Introduce apellidos: "));
-			} catch (McRoyException e) {
-				e.getMessage();
+			if (esUsuarioRegistrado) {
+				usuario = new Usuario(comprobarEntero("Introduce identificador de usuario:"));
+			} else {
+				try {
+					usuario = new Usuario(solicitarString("Introduce E-mail: "), solicitarString("Introduce nombre: "),
+							solicitarString("Introduce apellidos: "));
+				} catch (McRoyException e) {
+					e.getMessage();
+				}
 			}
-		}
 
-		mostrarMensaje("Hola " + usuario.getNombre());
-		pedido.esParaLlevar = solicitarTipo("(1)Para LLevar" + "\n" + "(2)Comer aqui" + "\n");
-
-		int seleccionProducto;
-		char respuesta;
-		
-		do {
+			mostrarMensaje("Hola " + usuario.getNombre());
+			pedido.esParaLlevar = solicitarTipo("(1)Para LLevar" + "\n" + "(2)Comer aqui" + "\n");
+			
+			char respuesta;
+			
 			do {
-				int seleccionCategoria = seleccionarCategoria();
-				seleccionProducto = seleccionarProducto(seleccionCategoria, pedido);
-			} while (seleccionProducto == -1);
-			mostrarMensaje("Desea añadir algo mas?(S/N)");
-			respuesta = solicitarRespuesta();
-		} while (respuesta == 'S');
-		
-		pedido.esServicioMesa = solicitarTipo("(1)Servir en mesa" + "\n" + "(2)Recoger en mostrador" + "\n");
-		mostrarMensaje("                " + pedido.getIdPedidoPantalla());
-		mostrarMensaje("           " + restaurante.getNombre().concat("\n").concat(restaurante.getDireccion()).concat("\n").concat(pedido.toString()));
+				int seleccionProducto;
+				do {
+					int seleccionCategoria = seleccionarCategoria();
+					seleccionProducto = seleccionarProducto(seleccionCategoria, pedido);
+				} while (seleccionProducto == -1);
+				respuesta = solicitarRespuesta("Desea añadir algo mas?(S/N)");
+			} while (respuesta == 'S');
+			
+			pedido.esServicioMesa = solicitarTipo("(1)Servir en mesa" + "\n" + "(2)Recoger en mostrador" + "\n");
+			
+			if (!pedido.esServicioMesa) {
+				mostrarMensaje("                " + pedido.getIdPedidoPantalla());
+			}
+			mostrarMensaje("           " + restaurante.getNombre().concat("\n").concat(restaurante.getDireccion()).concat("\n").concat(pedido.toString()));
+		}
+	
 	}
 
 	private static int seleccionarProducto(int seleccionCategoria, Pedido pedido) {
@@ -88,9 +89,8 @@ public class MainMcRoy {
 						mostrarMensaje(" " + precioProductos[i] + "€");
 					}
 					i++;
-				}
-				mostrarMensaje("(0)Volver a Categorias");
-				seleccionProducto = comprobarEntero() - 1;
+				}			
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -119,8 +119,7 @@ public class MainMcRoy {
 					}
 					i++;
 				}
-				mostrarMensaje("(0)Volver a Categorias");
-				seleccionProducto = comprobarEntero() - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -149,8 +148,7 @@ public class MainMcRoy {
 					}
 					i++;
 				}
-				mostrarMensaje("(0)Volver a Categorias");
-				seleccionProducto = comprobarEntero() - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -179,8 +177,7 @@ public class MainMcRoy {
 					}
 					i++;
 				}
-				mostrarMensaje("(0)Volver a Categorias");
-				seleccionProducto = comprobarEntero() - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -209,8 +206,7 @@ public class MainMcRoy {
 					}
 					i++;
 				}
-				mostrarMensaje("(0)Volver a Categorias");
-				seleccionProducto = comprobarEntero() - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -239,8 +235,7 @@ public class MainMcRoy {
 					}
 					i++;
 				}
-				mostrarMensaje("(0)Volver a Categorias");
-				seleccionProducto = comprobarEntero() - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -259,7 +254,7 @@ public class MainMcRoy {
 						}
 						mostrarMensaje("(0)Volver a Categorias");
 						do {
-							seleccionProducto = comprobarEntero() - 1;
+							seleccionProducto = comprobarEntero("") - 1;
 						} while (seleccionProducto < -1 || seleccionProducto > nombreProductos.length);
 					}
 
@@ -271,7 +266,7 @@ public class MainMcRoy {
 						}
 						mostrarMensaje("(0)Volver a Categorias");
 						do {
-							seleccionProducto = comprobarEntero() - 1;
+							seleccionProducto = comprobarEntero("") - 1;
 						} while (seleccionProducto < -1 || seleccionProducto > nombreProductos.length);
 					}
 
@@ -283,7 +278,7 @@ public class MainMcRoy {
 						}
 						mostrarMensaje("(0)Volver a Categorias");
 						do {
-							seleccionProducto = comprobarEntero() - 1;
+							seleccionProducto = comprobarEntero("") - 1;
 						} while (seleccionProducto < -1 || seleccionProducto > nombreProductos.length);
 					}
 
@@ -295,7 +290,7 @@ public class MainMcRoy {
 						}
 						mostrarMensaje("(0)Volver a Categorias");
 						do {
-							seleccionProducto = comprobarEntero() - 1;
+							seleccionProducto = comprobarEntero("") - 1;
 						} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 					}
 				}
@@ -308,30 +303,29 @@ public class MainMcRoy {
 
 		case 7:
 			do {
-				i = 0;
-				nombreProductos = new String[CategoriaPostresHeladosRoy.values().length];
-				precioProductos = new double[CategoriaPostresHeladosRoy.values().length];
-				tipoSirope = new String[TipoSirope.values().length];
-				tipoTopping = new String[TipoTopping.values().length];
-				for (CategoriaPostresHeladosRoy producto : CategoriaPostresHeladosRoy.values()) {
-					cantidadEspacios = 40;
-					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
-					nombreProductos[i] = producto.getNombre();
-					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
-					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
-					}
-					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
-					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
-					}
-					i++;
-				}
-				mostrarMensaje("(0)Volver a Categorias");
 				do {
-					seleccionProducto = comprobarEntero() - 1;
+					i = 0;
+					nombreProductos = new String[CategoriaPostresHeladosRoy.values().length];
+					precioProductos = new double[CategoriaPostresHeladosRoy.values().length];
+					tipoSirope = new String[TipoSirope.values().length];
+					tipoTopping = new String[TipoTopping.values().length];
+					for (CategoriaPostresHeladosRoy producto : CategoriaPostresHeladosRoy.values()) {
+						cantidadEspacios = 40;
+						cantidadEspacios = cantidadEspacios - producto.getNombre().length();
+						nombreProductos[i] = producto.getNombre();
+						precioProductos[i] = producto.getPrecio();
+						System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+						for (int j = 0; j < cantidadEspacios; j++) {
+							System.out.print(" ");
+						}
+						if (i > 8) {
+							mostrarMensaje(precioProductos[i] + "€");
+						} else {
+							mostrarMensaje(" " + precioProductos[i] + "€");
+						}
+						i++;
+					}
+					seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 				} while (seleccionProducto < -1 || seleccionProducto > nombreProductos.length);
 
 				if (seleccionProducto == 0 || seleccionProducto == 1 || seleccionProducto == 3) {
@@ -342,8 +336,7 @@ public class MainMcRoy {
 							mostrarMensaje("(" + (k + 1) + ")" + tipoSirope[k]);
 							k++;
 						}
-						mostrarMensaje("(0)Volver a Categorias");
-						seleccionSirope = comprobarEntero() - 1;
+						seleccionSirope = comprobarEntero("(0)Volver a Categorias") - 1;
 					} while (seleccionSirope < -1 || seleccionSirope > tipoSirope.length);
 					if (seleccionSirope == -1) {
 						seleccionProducto = -1;
@@ -359,8 +352,7 @@ public class MainMcRoy {
 							mostrarMensaje("(" + (l + 1) + ")" + tipoTopping[l]);
 							l++;
 						}
-						mostrarMensaje("(0)Volver a Categorias");
-						seleccionTopping = comprobarEntero() - 1;
+						seleccionTopping = comprobarEntero("(0)Volver a Categorias") - 1;
 						if (seleccionTopping == -1) {
 							seleccionProducto = -1;
 						}
@@ -395,8 +387,7 @@ public class MainMcRoy {
 					}
 					i++;
 				}
-				mostrarMensaje("(0)Volver a Categorias");
-				seleccionProducto = comprobarEntero() - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -425,8 +416,7 @@ public class MainMcRoy {
 					}
 					i++;
 				}
-				mostrarMensaje("(0)Volver a Categorias");
-				seleccionProducto = comprobarEntero() - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -455,8 +445,7 @@ public class MainMcRoy {
 					}
 					i++;
 				}
-				mostrarMensaje("(0)Volver a Categorias");
-				seleccionProducto = comprobarEntero() - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -471,11 +460,12 @@ public class MainMcRoy {
 
 	}
 
-	private static char solicitarRespuesta() {
+	private static char solicitarRespuesta(String string) {
 
 		char respuesta;
 
 		do {
+			mostrarMensaje(string);
 			respuesta = teclado.nextLine().toUpperCase().charAt(0);
 		} while (respuesta != 'S' && respuesta != 'N');
 
@@ -491,7 +481,7 @@ public class MainMcRoy {
 			for (int i = 0; i < Categoria.CATEGORIAS.length; i++) {
 				System.out.println("(" + (i + 1) + ")" + Categoria.CATEGORIAS[i]);
 			}
-			seleccionCategoria = comprobarEntero();
+			seleccionCategoria = comprobarEntero("");
 		} while (seleccionCategoria <= 0 || seleccionCategoria > Producto.CATEGORIAS.length);
 
 		return seleccionCategoria;
@@ -499,15 +489,12 @@ public class MainMcRoy {
 
 	private static String solicitarString(String string) {
 
-		System.out.println(string);
-		String cadena = comprobarString();
-
-		return cadena;
-	}
-
-	private static String comprobarString() {
-
-		String cadena = teclado.nextLine();
+		String cadena;
+		
+		do {
+			mostrarMensaje(string);
+			cadena = teclado.nextLine();
+		} while (cadena.length() <= 0);
 
 		return cadena;
 	}
@@ -518,8 +505,7 @@ public class MainMcRoy {
 		int tipo;
 
 		do {
-			System.out.print(string);
-			tipo = comprobarEntero();
+			tipo = comprobarEntero(string);
 		} while (tipo < 1 || tipo > 2);
 
 		if (tipo == 2) {
@@ -529,7 +515,7 @@ public class MainMcRoy {
 		return esValidado;
 	}
 
-	private static int comprobarEntero() {
+	private static int comprobarEntero(String string) {
 
 		int numero = 0;
 		boolean esDigito;
@@ -537,6 +523,7 @@ public class MainMcRoy {
 		do {
 			try {
 				esDigito = true;
+				mostrarMensaje(string);
 				numero = Integer.parseInt(teclado.nextLine());
 			} catch (NumberFormatException e) {
 				mostrarMensaje("Introduce un digito");
@@ -550,6 +537,5 @@ public class MainMcRoy {
 	private static void mostrarMensaje(String string) {
 
 		System.out.println(string);
-
 	}
 }

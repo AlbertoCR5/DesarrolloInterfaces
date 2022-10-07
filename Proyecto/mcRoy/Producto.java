@@ -1,16 +1,18 @@
 package mcRoy;
 
-public class Producto extends Categoria{
+public class Producto extends Categoria implements IProducto{
 
+	//Constantes con varios Productos
 	public static final String PRINCIPAL_HAPPYMEALROY[] = {"McBurguerRoy", "McChickenBurguerROY", "4 McNuggetsRoy", "9 McBitesRoy"};
 	public static final String COMPLEMENTO_HAPPYMEALROY[] = {"Patatas peques", "Happy CheROYtos", CategoriaMcRoyEnsaladas.MCROYRECREO.getNombre()};
 	public static final String POSTRE_HAPPYMEALROY[] = {"Manzana", "Pinna", "McFreezyRoy sabor mango y lichi", "Danonino"};
 	public static final String BEBIDA_HAPPYMEALROY[] = {"Agua", "TropicanAranja", "TropicanAnzana"};
 	
-	static int idProducto = 64;
+	private static int idProducto = 64; //Ya hay 63 productos creados
 	String nombre, descripcion;
 	double precio;
 	
+	//Constructores
 	public Producto(int idProducto, String nombreCategoria, String nombre, double precio) throws McRoyException {
 		super(nombreCategoria);
 		
@@ -28,6 +30,10 @@ public class Producto extends Categoria{
 		idProducto++;
 	}
 
+	public static int getIdProducto() {
+		return idProducto;
+	}
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -42,6 +48,7 @@ public class Producto extends Categoria{
 
 	public void setPrecio(double precio) throws McRoyException {
 		
+		//Si el precio del producto es menor o igual a cero, se lanzara una excepcion
 		if (precio <= 0) {
 			throw new McRoyException("Precio del producto no valido");
 		}
@@ -56,12 +63,17 @@ public class Producto extends Categoria{
 		this.descripcion = descripcion;
 	}
 
+	/**
+	 * Se motrara un listado con todos los productos organizados por sus categorias
+	 */
 	@Override
 	public String toString() {
 		
 		StringBuilder sbProductos = new StringBuilder();
 		int i = 0;
-
+		
+		sbProductos.append("LISTADO DE PRODUCTOS:" + "\n");
+		
 		sbProductos.append(Producto.CATEGORIAS[i] + ":" + "\n");
 		for (CategoriaMcRoyMenus producto : CategoriaMcRoyMenus.values()) {
 			sbProductos.append(producto.getIdProducto() + producto.getNombre() + " " + producto.getPrecio() + "€" + producto.getDescripcion() + "\n");	
@@ -150,8 +162,6 @@ public class Producto extends Categoria{
 			sbProductos.append(producto.getIdProducto() + producto.getNombre() + " " + producto.getPrecio() + "€" + producto.getDescripcion() + "\n");	
 		}
 		i++;
-
-		sbProductos.append("(0)Volver a Categorias" + "\n");
 		
 		return sbProductos.toString();
 	}
