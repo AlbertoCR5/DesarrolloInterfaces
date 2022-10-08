@@ -11,22 +11,25 @@ public class MainMcRoy {
 		RestauranteMcMonroy restaurante;
 		Usuario usuario = null;
 		Pedido pedido = new Pedido();
-		boolean esCliente = solicitarTipo("Bienvenido a McMonroy" + "\n" + "(1)Eres cliente" + "\n" + "(2)No Eres cliente" + "\n");
+		
+		//Se solicita al usuario si es cliente o inversor
+		boolean esCliente = solicitarTipo("Bienvenido a McMonroy" + "\n" + "(1)Eres Cliente" + "\n" + "(2)Eres Inversor");
 
+		//Si es inversor, se le soliciran los datos del restaurante
 		if (!esCliente) {
 			restaurante = new RestauranteMcMonroy(solicitarString("Introduce nombre restaurante: "),
 					solicitarString("Introduce direccion restaurante: "), comprobarEntero("Establece un codigo de seguridad: "));
 			mostrarMensaje("Restaurante creado correctamente" + "\n" + restaurante.toString());
-		} else {
-			restaurante = new RestauranteMcMonroy();
-			
+		} else { //Si es cliente se creara un restaurante con datos por defecto
+			restaurante = new RestauranteMcMonroy();			
 			mostrarMensaje("Bienvenido a " + restaurante.getNombre());
+			//Se solicita al cliente si es usuario registrado o nuevo cliente
+			boolean esUsuarioRegistrado = solicitarTipo("(1)Usuario registrado" + "\n" + "(2)Nuevo Cliente");
 			
-			boolean esUsuarioRegistrado = solicitarTipo("(1)Usuario registrado" + "\n" + "(2)Nuevo Cliente" + "\n");
-
 			if (esUsuarioRegistrado) {
+				//Se le solicita al usuario registradi el numero de usuario, como prueba, cualquier numero vale
 				usuario = new Usuario(comprobarEntero("Introduce identificador de usuario:"));
-			} else {
+			} else {//Si no es usuario registrado, se le solicitaran los datos
 				try {
 					usuario = new Usuario(solicitarString("Introduce E-mail: "), solicitarString("Introduce nombre: "),
 							solicitarString("Introduce apellidos: "));
@@ -34,12 +37,12 @@ public class MainMcRoy {
 					e.getMessage();
 				}
 			}
-
+			//Se le solicita al cliente si el pedido es para llevar o comer en restaurante
 			mostrarMensaje("Hola " + usuario.getNombre());
-			pedido.esParaLlevar = solicitarTipo("(1)Para LLevar" + "\n" + "(2)Comer aqui" + "\n");
+			pedido.esParaLlevar = solicitarTipo("(1)Para LLevar" + "\n" + "(2)Comer aqui");
 			
 			char respuesta;
-			
+			//Se solicita al cliente que escoja un producto entre las diferentes categorias y se le preguntara si desea annadir algo mas
 			do {
 				int seleccionProducto;
 				do {
@@ -49,8 +52,10 @@ public class MainMcRoy {
 				respuesta = solicitarRespuesta("Desea añadir algo mas?(S/N)");
 			} while (respuesta == 'S');
 			
+			//Si no desea nada mas, se preguntara al cliente si el servicio es a mesa, o si recogera el pedido en el mostrador
 			pedido.esServicioMesa = solicitarTipo("(1)Servir en mesa" + "\n" + "(2)Recoger en mostrador" + "\n");
 			
+			//Muestra un ticket y el programa finaliza
 			if (!pedido.esServicioMesa) {
 				mostrarMensaje("                " + pedido.getIdPedidoPantalla());
 			}
@@ -248,6 +253,7 @@ public class MainMcRoy {
 				for (CategoriaHappyMealRoy producto : CategoriaHappyMealRoy.values()) {
 					if (producto.equals(CategoriaHappyMealRoy.PRINCIPAL)) {
 						nombreProductos = new String[Producto.PRINCIPAL_HAPPYMEALROY.length];
+						mostrarMensaje("Seleccione Principal");
 						for (int j = 0; j < Producto.PRINCIPAL_HAPPYMEALROY.length; j++) {
 							nombreProductos[j] = Producto.PRINCIPAL_HAPPYMEALROY[j];
 							System.out.println("(" + (j + 1) + ")" + nombreProductos[j]);
@@ -260,6 +266,7 @@ public class MainMcRoy {
 
 					if (producto.equals(CategoriaHappyMealRoy.COMPLEMENTO) && seleccionProducto != -1) {
 						nombreProductos = new String[Producto.COMPLEMENTO_HAPPYMEALROY.length];
+						mostrarMensaje("Seleccione Complemento");
 						for (int j = 0; j < Producto.COMPLEMENTO_HAPPYMEALROY.length; j++) {
 							nombreProductos[j] = Producto.COMPLEMENTO_HAPPYMEALROY[j];
 							System.out.println("(" + (j + 1) + ")" + nombreProductos[j]);
@@ -272,6 +279,7 @@ public class MainMcRoy {
 
 					if (producto.equals(CategoriaHappyMealRoy.BEBIDA) && seleccionProducto != -1) {
 						nombreProductos = new String[Producto.BEBIDA_HAPPYMEALROY.length];
+						mostrarMensaje("Seleccione Bebida");
 						for (int j = 0; j < Producto.BEBIDA_HAPPYMEALROY.length; j++) {
 							nombreProductos[j] = Producto.BEBIDA_HAPPYMEALROY[j];
 							System.out.println("(" + (j + 1) + ")" + nombreProductos[j]);
@@ -284,6 +292,7 @@ public class MainMcRoy {
 
 					if (producto.equals(CategoriaHappyMealRoy.POSTRE) && seleccionProducto != -1) {
 						nombreProductos = new String[Producto.POSTRE_HAPPYMEALROY.length];
+						mostrarMensaje("Seleccione Postre");
 						for (int j = 0; j < Producto.POSTRE_HAPPYMEALROY.length; j++) {
 							nombreProductos[j] = Producto.POSTRE_HAPPYMEALROY[j];
 							System.out.println("(" + (j + 1) + ")" + nombreProductos[j]);
@@ -479,7 +488,7 @@ public class MainMcRoy {
 		do {
 			mostrarMensaje("Seleccione categoria");
 			for (int i = 0; i < Categoria.CATEGORIAS.length; i++) {
-				System.out.println("(" + (i + 1) + ")" + Categoria.CATEGORIAS[i]);
+				mostrarMensaje("(" + (i + 1) + ")" + Categoria.CATEGORIAS[i]);
 			}
 			seleccionCategoria = comprobarEntero("");
 		} while (seleccionCategoria <= 0 || seleccionCategoria > Producto.CATEGORIAS.length);
@@ -520,10 +529,10 @@ public class MainMcRoy {
 		int numero = 0;
 		boolean esDigito;
 
+		mostrarMensaje(string);
 		do {
 			try {
-				esDigito = true;
-				mostrarMensaje(string);
+				esDigito = true;				
 				numero = Integer.parseInt(teclado.nextLine());
 			} catch (NumberFormatException e) {
 				mostrarMensaje("Introduce un digito");
