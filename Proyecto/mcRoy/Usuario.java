@@ -10,28 +10,34 @@ public class Usuario implements IUsuario{
 	public static final String EMAIL_USUARIO = "Rafael.prieto@iescristobaldemonroy.es";
 	public static final String NOMBRE_USUARIO = "Rafael";
 	public static final String APELLIDOS_USUARIO = "Prieto";
+	private static final int CIFRAS_PIN = 4;
 
-	int idUsuario = 1;
+	private int idUsuario = 1, pinUsuario, puntos;
 	private String email, nombre, apellidos, fechaNacimiento, direccion, telefono;
 	
 	//Metodo de prueba que al introducir un numero de usuario cualquiera le dara uno datos por defecto a los aributos
-	public Usuario(int idUsuario) {
+	public Usuario(int idUsuario, int pinUsuario, int puntos) throws McRoyException {
 
-		this.idUsuario = idUsuario;
 		this.email = EMAIL_USUARIO;
 		this.nombre = NOMBRE_USUARIO;
 		this.apellidos = APELLIDOS_USUARIO;
+		setPinUsuario(pinUsuario);
+		this.puntos = 0;
+		idUsuario++;
+		
 	}
 	//Constructor con datos fundamentales para crear un usuario
-	public Usuario(String email, String nombre, String apellidos) throws McRoyException {
+	public Usuario(String email, String nombre, String apellidos, int pinUsuario, int puntos) throws McRoyException {
 	
 		setEmail(email);
 		this.nombre = nombre;
 		this.apellidos = apellidos;
+		setPinUsuario(pinUsuario);
 		idUsuario++;
+		this.puntos = 0;
 	}
 	//Constructor con otros datos de interes
-	public Usuario(int idUsuario, String email, String nombre, String apellidos, String fechaNacimiento,
+	public Usuario(int idUsuario, String email, String nombre, String apellidos, int pinUsuario, int puntos, String fechaNacimiento,
 			String direccion, String telefono) throws McRoyException {
 		
 		this.email = email;
@@ -39,12 +45,29 @@ public class Usuario implements IUsuario{
 		this.apellidos = apellidos;
 		this.fechaNacimiento = fechaNacimiento;
 		this.direccion = direccion;
-		setTelefono(telefono);;
+		setTelefono(telefono);
+		setPinUsuario(pinUsuario);
 		idUsuario++;
+		this.puntos = 0;
 	}
 
 	public int getIdUsuario() {
 		return idUsuario;
+	}
+	
+	@Override
+	public int getPinUsuario() {
+		
+		return pinUsuario;
+	}	
+
+	private void setPinUsuario(int pin) throws McRoyException {
+
+		//Se comprueba que el pin contenga 4 cifras, si no, lanzara una excepcion
+		if (String.valueOf(pin).length() != CIFRAS_PIN) {
+			throw new McRoyException ("EL pin debe tener al menos 4 cifras.");
+		}
+		this.pinUsuario = pin;
 	}
 
 	public String getEmail() {
@@ -96,6 +119,16 @@ public class Usuario implements IUsuario{
 		return telefono;
 	}
 	
+	public int getPuntos() {
+		return puntos;
+	}
+	public void setPuntos(int puntos) throws McRoyException {
+		
+		if (puntos < 0) {
+			throw new McRoyException("Puntos Insuficientes");
+		}
+		this.puntos = puntos;
+	}
 	/**
 	 * Setter que comprueba que el telefono introducido tenga 9 digitos
 	 * @param telefono
@@ -115,6 +148,47 @@ public class Usuario implements IUsuario{
 	}
 	
 	/**
+	 * Metodo que comprueba que el pin introducido sea correcto
+	 * @param pinIntroducido
+	 * @return boolean esPinCorrecto true o false
+	 * @throws CuentaCorrienteMonroyException
+	 */
+	private boolean compruebaPin(int pinIntroducido) throws McRoyException {
+		
+		boolean esPinCorrecto = true;
+		// Si pin introducido no coindice con el actual lanzara una excepcion
+		if (this.pinUsuario != pinIntroducido) {
+			esPinCorrecto = false;
+			throw new McRoyException ("EL pin introducido es incorrecto.");		
+		}
+		
+		return esPinCorrecto;	
+	}
+	
+	/**
+	 * Metodo que cambia el pin
+	 * @param pinIntroducido
+	 * @param pinNuevo
+	 * @param repetirPinNuevo
+	 * @throws CuentaCorrienteMonroyException
+	 */
+	protected void cambiarPin(int pinIntroducido, int pinNuevo, int repetirPinNuevo) throws McRoyException {
+		
+		// Si pin introducido no coindice con el actual lanzara una excepcion
+		if (compruebaPin(pinIntroducido)) {
+			//Se solicitaran el nuevo pin dos veces, si coinciden se actualizara el pin actual
+			if (pinNuevo == repetirPinNuevo) {
+				setPinUsuario(pinNuevo);
+			}
+			//Si no coinciden los pines introducidos se lanzara una excepcion
+			else {
+				throw new McRoyException ("Los pines introducidos no coinciden.");
+			}
+		}
+			
+	}
+	
+	/**
 	 * Metodo que recibe por parametro un email y comprueba su validez
 	 * @param email
 	 * @return email valido, o no valido
@@ -124,7 +198,7 @@ public class Usuario implements IUsuario{
         Matcher mather = PATRON.matcher(email);
         return mather.find();
     }
-	
+
 	/**
 	 * Metodo que recibe por parametro un telefono y comprueba que solo contenga digitos
 	 * @param telefono

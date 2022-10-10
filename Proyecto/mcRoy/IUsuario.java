@@ -8,4 +8,5 @@ public interface IUsuario {
 	public String getFechaNacimiento();
 	public String getDireccion();
 	public String getTelefono();
+	public int getPinUsuario();
 }
