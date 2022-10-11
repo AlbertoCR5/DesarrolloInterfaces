@@ -5,7 +5,8 @@ import java.util.regex.Pattern;
 
 public class Usuario implements IUsuario{
 	
-    // Patron para validar el email
+    private static final int PIN_DEFECTO = 1234;
+	// Patron para validar el email
 	public static Pattern PATRON = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 	public static final String EMAIL_USUARIO = "Rafael.prieto@iescristobaldemonroy.es";
 	public static final String NOMBRE_USUARIO = "Rafael";
@@ -22,9 +23,9 @@ public class Usuario implements IUsuario{
 		this.email = EMAIL_USUARIO;
 		this.nombre = NOMBRE_USUARIO;
 		this.apellidos = APELLIDOS_USUARIO;
-		setPinUsuario(pinUsuario);
+		this.pinUsuario = PIN_DEFECTO;
 		puntos = 0;
-		idUsuario++;
+		this.idUsuario = idUsuario;
 		
 	}
 	//Constructor con datos fundamentales para crear un usuario
@@ -38,7 +39,7 @@ public class Usuario implements IUsuario{
 		puntos = 0;
 	}
 	//Constructor con otros datos de interes
-	public Usuario(int idUsuario, String email, String nombre, String apellidos, int pinUsuario, String fechaNacimiento,
+	public Usuario(String email, String nombre, String apellidos, int pinUsuario, String fechaNacimiento,
 			String direccion, String telefono) throws McRoyException {
 		
 		this.email = email;
@@ -62,13 +63,13 @@ public class Usuario implements IUsuario{
 		return pinUsuario;
 	}	
 
-	private void setPinUsuario(int pin) throws McRoyException {
+	private void setPinUsuario(int pinUsuario) throws McRoyException {
 
 		//Se comprueba que el pin contenga 4 cifras, si no, lanzara una excepcion
-		if (String.valueOf(pin).length() != CIFRAS_PIN) {
+		if (String.valueOf(pinUsuario).length() != CIFRAS_PIN) {
 			throw new McRoyException ("EL pin debe tener al menos 4 cifras.");
 		}
-		this.pinUsuario = pin;
+		this.pinUsuario = pinUsuario;
 	}
 
 	public String getEmail() {

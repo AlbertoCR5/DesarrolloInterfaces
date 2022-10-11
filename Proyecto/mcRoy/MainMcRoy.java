@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class MainMcRoy {
 
+	private static final char AFIRMATIVO = 'S';
 	public static Scanner teclado = new Scanner(System.in);
 
 	public static void main(String[] args) {
@@ -13,18 +14,18 @@ public class MainMcRoy {
 		Pedido pedido = new Pedido();
 		
 		//Se solicita al usuario si es cliente o inversor
-		boolean esCliente = solicitarTipo("Bienvenido a McMonroy" + "\n" + "(1)Eres Cliente" + "\n" + "(2)Eres Inversor");
+		boolean esCliente = solicitarTipo("Bienvenido a McMonroy\n(1)Eres Cliente\n(2)Eres Inversor\n-->");
 
 		//Si es inversor, se le soliciran los datos del restaurante
 		if (!esCliente) {
 			restaurante = new RestauranteMcMonroy(solicitarString("Introduce nombre restaurante: "),
 					solicitarString("Introduce direccion restaurante: "), comprobarEntero("Establece un codigo de seguridad: "));
-			mostrarMensaje("Restaurante creado correctamente" + "\n" + restaurante.toString());
+			mostrarMensaje("Restaurante creado correctamente\n".concat(restaurante.toString()));
 		} else { //Si es cliente se creara un restaurante con datos por defecto
 			restaurante = new RestauranteMcMonroy();			
-			mostrarMensaje("Bienvenido a " + restaurante.getNombre());
+			mostrarMensaje("Bienvenido a ".concat(restaurante.getNombre().concat("\n")));
 			//Se solicita al cliente si es usuario registrado o nuevo cliente
-			boolean esUsuarioRegistrado = solicitarTipo("(1)Usuario registrado" + "\n" + "(2)Nuevo Cliente");
+			boolean esUsuarioRegistrado = solicitarTipo("(1)Usuario registrado\n(2)Nuevo Cliente\n-->");
 			
 			try {
 				if (esUsuarioRegistrado) {
@@ -36,16 +37,16 @@ public class MainMcRoy {
 				} else {// Si no es usuario registrado, se le solicitaran los datos
 
 					usuario = new Usuario(solicitarString("Introduce E-mail: "), solicitarString("Introduce nombre: "),
-							solicitarString("Introduce apellidos: "), comprobarEntero("Introduce un pin valido"));
+							solicitarString("Introduce apellidos: "), comprobarEntero("Introduce un pin valido: "));
 
 				}
 			} catch (McRoyException e) {
-				mostrarMensaje("" + e);;
+				mostrarMensaje("" + e);
 			}
 			
 			//Se le solicita al cliente si el pedido es para llevar o comer en restaurante
-			mostrarMensaje("Hola " + usuario.getNombre());
-			pedido.esParaLlevar = solicitarTipo("(1)Para LLevar" + "\n" + "(2)Comer aqui");
+			mostrarMensaje("Hola ".concat(usuario.getNombre().concat("\n")));
+			pedido.esParaLlevar = solicitarTipo("(1)Para LLevar\n(2)Comer aqui\n-->");
 			
 			char respuesta;
 			//Se solicita al cliente que escoja un producto entre las diferentes categorias y se le preguntara si desea annadir algo mas
@@ -55,15 +56,15 @@ public class MainMcRoy {
 					int seleccionCategoria = seleccionarCategoria();
 					seleccionProducto = seleccionarProducto(seleccionCategoria, pedido);
 				} while (seleccionProducto == -1);
-				respuesta = solicitarRespuesta("Desea añadir algo mas?(S/N)");
-			} while (respuesta == 'S');
+				respuesta = solicitarRespuesta("Desea añadir algo mas?(S/N): ");
+			} while (respuesta == AFIRMATIVO);
 			
 			//Si no desea nada mas, se preguntara al cliente si el servicio es a mesa, o si recogera el pedido en el mostrador
-			pedido.esServicioMesa = solicitarTipo("(1)Servir en mesa" + "\n" + "(2)Recoger en mostrador" + "\n");
+			pedido.esServicioMesa = solicitarTipo("(1)Servir en mesa\n(2)Recoger en mostrador\n-->");
 			
 			//Muestra un ticket y el programa finaliza
 			if (!pedido.esServicioMesa) {
-				mostrarMensaje("                " + pedido.getIdPedidoPantalla());
+				mostrarMensaje("                " + pedido.getIdPedidoPantalla() + ("\n"));
 			}
 			mostrarMensaje("           " + restaurante.getNombre().concat("\n").concat(restaurante.getDireccion()).concat("\n").concat(pedido.toString()));
 		}
@@ -75,8 +76,8 @@ public class MainMcRoy {
 		int seleccionProducto = 0, seleccionSirope, seleccionTopping, cantidadEspacios, i, k, l;
 		String nombreProductos[], tipoSirope[], tipoTopping[];
 		double precioProductos[];
-
-		mostrarMensaje("Seleccione producto");
+		char esMenuGrande;
+		mostrarMensaje("Seleccione producto\n");
 
 		switch (seleccionCategoria - 1) {
 
@@ -90,22 +91,28 @@ public class MainMcRoy {
 					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 					nombreProductos[i] = producto.getNombre();
 					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+					mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
+						mostrarMensaje(" ");
 					}
 					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
+						mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
+						mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 					}
 					i++;
-				}			
-				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+				}
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
-				pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				esMenuGrande = solicitarRespuesta("Quieres hacerlo GRANDE?(S/N): ");
+				if (esMenuGrande == AFIRMATIVO) {
+					pedido.annadirProducto(precioProductos[seleccionProducto] + Producto.HAZLO_GRANDE,
+							nombreProductos[seleccionProducto].concat("  ".concat(Producto.MENU_GRANDE)));
+				} else {
+					pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				}
 			}
 			break;
 
@@ -119,22 +126,29 @@ public class MainMcRoy {
 					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 					nombreProductos[i] = producto.getNombre();
 					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+					mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
+						mostrarMensaje(" ");
 					}
 					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
+						mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
+						mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 					}
 					i++;
 				}
-				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
-				pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				esMenuGrande = solicitarRespuesta("Quieres hacerlo GRANDE?(S/N): ");
+				if (esMenuGrande == AFIRMATIVO) {
+					pedido.annadirProducto(precioProductos[seleccionProducto] + Producto.HAZLO_GRANDE,
+							nombreProductos[seleccionProducto].concat("  ".concat(Producto.MENU_GRANDE)));
+				} else {
+					pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				}
+
 			}
 			break;
 
@@ -148,22 +162,29 @@ public class MainMcRoy {
 					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 					nombreProductos[i] = producto.getNombre();
 					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+					mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
+						mostrarMensaje(" ");
 					}
 					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
+						mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
+						mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 					}
 					i++;
 				}
-				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
-				pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				esMenuGrande = solicitarRespuesta("Quieres hacerlo GRANDE?(S/N): ");
+				if (esMenuGrande == AFIRMATIVO) {
+					pedido.annadirProducto(precioProductos[seleccionProducto] + Producto.HAZLO_GRANDE,
+							nombreProductos[seleccionProducto].concat("  ".concat(Producto.MENU_GRANDE)));
+				} else {
+					pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				}
+
 			}
 			break;
 
@@ -177,22 +198,29 @@ public class MainMcRoy {
 					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 					nombreProductos[i] = producto.getNombre();
 					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+					mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
+						mostrarMensaje(" ");
 					}
 					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
+						mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
+						mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 					}
 					i++;
 				}
-				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
-				pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				esMenuGrande = solicitarRespuesta("Quieres hacerlo GRANDE?(S/N): ");
+				if (esMenuGrande == AFIRMATIVO) {
+					pedido.annadirProducto(precioProductos[seleccionProducto] + Producto.HAZLO_GRANDE,
+							nombreProductos[seleccionProducto].concat("  ".concat(Producto.MENU_GRANDE)));
+				} else {
+					pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				}
+
 			}
 			break;
 
@@ -206,22 +234,29 @@ public class MainMcRoy {
 					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 					nombreProductos[i] = producto.getNombre();
 					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+					mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
+						mostrarMensaje(" ");
 					}
 					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
+						mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
+						mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 					}
 					i++;
 				}
-				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
-				pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				esMenuGrande = solicitarRespuesta("Quieres hacerlo GRANDE?(S/N): ");
+				if (esMenuGrande == AFIRMATIVO) {
+					pedido.annadirProducto(precioProductos[seleccionProducto] + Producto.HAZLO_GRANDE,
+							nombreProductos[seleccionProducto].concat("  ".concat(Producto.MENU_GRANDE)));
+				} else {
+					pedido.annadirProducto(precioProductos[seleccionProducto], nombreProductos[seleccionProducto]);
+				}
+
 			}
 			break;
 
@@ -235,18 +270,18 @@ public class MainMcRoy {
 					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 					nombreProductos[i] = producto.getNombre();
 					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+					mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
+						mostrarMensaje(" ");
 					}
 					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
+						mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
+						mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 					}
 					i++;
 				}
-				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -259,12 +294,12 @@ public class MainMcRoy {
 				for (CategoriaHappyMealRoy producto : CategoriaHappyMealRoy.values()) {
 					if (producto.equals(CategoriaHappyMealRoy.PRINCIPAL)) {
 						nombreProductos = new String[Producto.PRINCIPAL_HAPPYMEALROY.length];
-						mostrarMensaje("Seleccione Principal");
+						mostrarMensaje("Seleccione Principal:\n");
 						for (int j = 0; j < Producto.PRINCIPAL_HAPPYMEALROY.length; j++) {
 							nombreProductos[j] = Producto.PRINCIPAL_HAPPYMEALROY[j];
-							System.out.println("(" + (j + 1) + ")" + nombreProductos[j]);
+							mostrarMensaje("(" + (j + 1) + ")".concat(nombreProductos[j]).concat("\n"));
 						}
-						mostrarMensaje("(0)Volver a Categorias");
+						mostrarMensaje("(0)Volver a Categorias\n-->");
 						do {
 							seleccionProducto = comprobarEntero("") - 1;
 						} while (seleccionProducto < -1 || seleccionProducto > nombreProductos.length);
@@ -272,12 +307,12 @@ public class MainMcRoy {
 
 					if (producto.equals(CategoriaHappyMealRoy.COMPLEMENTO) && seleccionProducto != -1) {
 						nombreProductos = new String[Producto.COMPLEMENTO_HAPPYMEALROY.length];
-						mostrarMensaje("Seleccione Complemento");
+						mostrarMensaje("Seleccione Complemento:\n");
 						for (int j = 0; j < Producto.COMPLEMENTO_HAPPYMEALROY.length; j++) {
 							nombreProductos[j] = Producto.COMPLEMENTO_HAPPYMEALROY[j];
-							System.out.println("(" + (j + 1) + ")" + nombreProductos[j]);
+							mostrarMensaje("(" + (j + 1) + ")".concat(nombreProductos[j]).concat("\n"));
 						}
-						mostrarMensaje("(0)Volver a Categorias");
+						mostrarMensaje("(0)Volver a Categorias\n-->");
 						do {
 							seleccionProducto = comprobarEntero("") - 1;
 						} while (seleccionProducto < -1 || seleccionProducto > nombreProductos.length);
@@ -285,12 +320,12 @@ public class MainMcRoy {
 
 					if (producto.equals(CategoriaHappyMealRoy.BEBIDA) && seleccionProducto != -1) {
 						nombreProductos = new String[Producto.BEBIDA_HAPPYMEALROY.length];
-						mostrarMensaje("Seleccione Bebida");
+						mostrarMensaje("Seleccione Bebida:\n");
 						for (int j = 0; j < Producto.BEBIDA_HAPPYMEALROY.length; j++) {
 							nombreProductos[j] = Producto.BEBIDA_HAPPYMEALROY[j];
-							System.out.println("(" + (j + 1) + ")" + nombreProductos[j]);
+							mostrarMensaje("(" + (j + 1) + ")".concat(nombreProductos[j]).concat("\n"));
 						}
-						mostrarMensaje("(0)Volver a Categorias");
+						mostrarMensaje("(0)Volver a Categorias\n-->");
 						do {
 							seleccionProducto = comprobarEntero("") - 1;
 						} while (seleccionProducto < -1 || seleccionProducto > nombreProductos.length);
@@ -298,12 +333,12 @@ public class MainMcRoy {
 
 					if (producto.equals(CategoriaHappyMealRoy.POSTRE) && seleccionProducto != -1) {
 						nombreProductos = new String[Producto.POSTRE_HAPPYMEALROY.length];
-						mostrarMensaje("Seleccione Postre");
+						mostrarMensaje("Seleccione Postre:\n");
 						for (int j = 0; j < Producto.POSTRE_HAPPYMEALROY.length; j++) {
 							nombreProductos[j] = Producto.POSTRE_HAPPYMEALROY[j];
-							System.out.println("(" + (j + 1) + ")" + nombreProductos[j]);
+							mostrarMensaje("(" + (j + 1) + ")".concat(nombreProductos[j]).concat("\n"));
 						}
-						mostrarMensaje("(0)Volver a Categorias");
+						mostrarMensaje("(0)Volver a Categorias\n-->");
 						do {
 							seleccionProducto = comprobarEntero("") - 1;
 						} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
@@ -329,18 +364,18 @@ public class MainMcRoy {
 						cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 						nombreProductos[i] = producto.getNombre();
 						precioProductos[i] = producto.getPrecio();
-						System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+						mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 						for (int j = 0; j < cantidadEspacios; j++) {
-							System.out.print(" ");
+							mostrarMensaje(" ");
 						}
 						if (i > 8) {
-							mostrarMensaje(precioProductos[i] + "€");
+							mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 						} else {
-							mostrarMensaje(" " + precioProductos[i] + "€");
+							mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 						}
 						i++;
 					}
-					seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+					seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 				} while (seleccionProducto < -1 || seleccionProducto > nombreProductos.length);
 
 				if (seleccionProducto == 0 || seleccionProducto == 1 || seleccionProducto == 3) {
@@ -348,10 +383,10 @@ public class MainMcRoy {
 						k = 0;
 						for (TipoSirope sirope : TipoSirope.values()) {
 							tipoSirope[k] = sirope.getTipoSirope();
-							mostrarMensaje("(" + (k + 1) + ")" + tipoSirope[k]);
+							mostrarMensaje("(" + (k + 1) + ")".concat(tipoSirope[k]).concat("\n"));
 							k++;
 						}
-						seleccionSirope = comprobarEntero("(0)Volver a Categorias") - 1;
+						seleccionSirope = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 					} while (seleccionSirope < -1 || seleccionSirope > tipoSirope.length);
 					if (seleccionSirope == -1) {
 						seleccionProducto = -1;
@@ -364,10 +399,10 @@ public class MainMcRoy {
 						l = 0;
 						for (TipoTopping topping : TipoTopping.values()) {
 							tipoTopping[l] = topping.getTipoTopping();
-							mostrarMensaje("(" + (l + 1) + ")" + tipoTopping[l]);
+							mostrarMensaje("(" + (l + 1) + ")".concat(tipoTopping[l]).concat("\n"));
 							l++;
 						}
-						seleccionTopping = comprobarEntero("(0)Volver a Categorias") - 1;
+						seleccionTopping = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 						if (seleccionTopping == -1) {
 							seleccionProducto = -1;
 						}
@@ -391,18 +426,18 @@ public class MainMcRoy {
 					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 					nombreProductos[i] = producto.getNombre();
 					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+					mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
+						mostrarMensaje(" ");
 					}
 					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
+						mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
+						mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 					}
 					i++;
 				}
-				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -420,18 +455,18 @@ public class MainMcRoy {
 					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 					nombreProductos[i] = producto.getNombre();
 					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+					mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
+						mostrarMensaje(" ");
 					}
 					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
+						mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
+						mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 					}
 					i++;
 				}
-				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -449,18 +484,18 @@ public class MainMcRoy {
 					cantidadEspacios = cantidadEspacios - producto.getNombre().length();
 					nombreProductos[i] = producto.getNombre();
 					precioProductos[i] = producto.getPrecio();
-					System.out.print("(" + (i + 1) + ")" + nombreProductos[i]);
+					mostrarMensaje("(" + (i + 1) + ")".concat(nombreProductos[i]));
 					for (int j = 0; j < cantidadEspacios; j++) {
-						System.out.print(" ");
+						mostrarMensaje(" ");
 					}
 					if (i > 8) {
-						mostrarMensaje(precioProductos[i] + "€");
+						mostrarMensaje(precioProductos[i] + "€".concat("\n"));
 					} else {
-						mostrarMensaje(" " + precioProductos[i] + "€");
+						mostrarMensaje(" " + precioProductos[i] + "€".concat("\n"));
 					}
 					i++;
 				}
-				seleccionProducto = comprobarEntero("(0)Volver a Categorias") - 1;
+				seleccionProducto = comprobarEntero("(0)Volver a Categorias\n-->") - 1;
 			} while (seleccionProducto < -1 || seleccionProducto >= nombreProductos.length);
 
 			if (seleccionProducto != -1) {
@@ -477,12 +512,18 @@ public class MainMcRoy {
 
 	private static char solicitarRespuesta(String string) {
 
-		char respuesta;
-
+		char respuesta = '0';
+		boolean esCaracter;
+		
 		do {
-			mostrarMensaje(string);
-			respuesta = teclado.nextLine().toUpperCase().charAt(0);
-		} while (respuesta != 'S' && respuesta != 'N');
+			try {
+				esCaracter = true;
+				mostrarMensaje(string);
+				respuesta = teclado.nextLine().toUpperCase().charAt(0);
+			} catch (Exception e) {
+				esCaracter = false;
+			}
+		} while (respuesta != 'S' && respuesta != 'N' || !esCaracter);
 
 		return respuesta;
 	}
@@ -492,9 +533,9 @@ public class MainMcRoy {
 		int seleccionCategoria;
 
 		do {
-			mostrarMensaje("Seleccione categoria");
+			mostrarMensaje("Seleccione categoria\n");
 			for (int i = 0; i < Categoria.CATEGORIAS.length; i++) {
-				mostrarMensaje("(" + (i + 1) + ")" + Categoria.CATEGORIAS[i]);
+				mostrarMensaje("(" + (i + 1) + ")".concat(Categoria.CATEGORIAS[i]).concat("\n"));
 			}
 			seleccionCategoria = comprobarEntero("");
 		} while (seleccionCategoria <= 0 || seleccionCategoria > Producto.CATEGORIAS.length);
@@ -551,6 +592,6 @@ public class MainMcRoy {
 
 	private static void mostrarMensaje(String string) {
 
-		System.out.println(string);
+		System.out.print(string);
 	}
 }

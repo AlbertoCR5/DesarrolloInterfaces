@@ -5,7 +5,7 @@ public class RestauranteMcMonroy implements IRestauranteMcMonroy {
 	
 	//Constantes
 	public static final String NOMBRE_RESTAURANTE = "MCMonroy's";
-	public static final String DIRECCION_RESTAURANTE = "Av. de la Constitucion, S/N, 41500 Alcala de Guadaira, Sevilla";
+	public static final String DIRECCION_RESTAURANTE = "Av. de la Constitucion, S/N,\n41500 Alcala de Guadaira, Sevilla";
 	public static final String TELEFONO_RESTAURANTE = "954 10 09 11";
 	public static final String DESCRIPCION_RESTAURANTE = "Cadena de restaurante de comida rapida de larga trayectoria famosa por sus hamburguesas, patatas fritas e instalar franquicias en lugares donde hay institutos";
 	public static final String HORARIO_APERTURA_RESTAURANTE =  "12:00";

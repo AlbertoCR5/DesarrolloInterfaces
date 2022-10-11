@@ -7,6 +7,8 @@ public class Producto extends Categoria implements IProducto{
 	public static final String COMPLEMENTO_HAPPYMEALROY[] = {"Patatas peques", "Happy CheROYtos", CategoriaMcRoyEnsaladas.MCROYRECREO.getNombre()};
 	public static final String POSTRE_HAPPYMEALROY[] = {"Manzana", "Pinna", "McFreezyRoy sabor mango y lichi", "Danonino"};
 	public static final String BEBIDA_HAPPYMEALROY[] = {"Agua", "TropicanAranja", "TropicanAnzana"};
+	public static final String MENU_GRANDE = "Grande";
+	public static final double HAZLO_GRANDE = 0.75;	
 	
 	private static int idProducto = 64; //Ya hay 63 productos creados
 	String nombre, descripcion;
