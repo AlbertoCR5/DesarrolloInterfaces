@@ -12,32 +12,33 @@ public class Usuario implements IUsuario{
 	public static final String APELLIDOS_USUARIO = "Prieto";
 	private static final int CIFRAS_PIN = 4;
 
-	private int idUsuario = 1, pinUsuario, puntos;
+	private int idUsuario = 1, pinUsuario;
+	static int puntos;
 	private String email, nombre, apellidos, fechaNacimiento, direccion, telefono;
 	
 	//Metodo de prueba que al introducir un numero de usuario cualquiera le dara uno datos por defecto a los aributos
-	public Usuario(int idUsuario, int pinUsuario, int puntos) throws McRoyException {
+	public Usuario(int idUsuario) throws McRoyException {
 
 		this.email = EMAIL_USUARIO;
 		this.nombre = NOMBRE_USUARIO;
 		this.apellidos = APELLIDOS_USUARIO;
 		setPinUsuario(pinUsuario);
-		this.puntos = 0;
+		puntos = 0;
 		idUsuario++;
 		
 	}
 	//Constructor con datos fundamentales para crear un usuario
-	public Usuario(String email, String nombre, String apellidos, int pinUsuario, int puntos) throws McRoyException {
+	public Usuario(String email, String nombre, String apellidos, int pinUsuario) throws McRoyException {
 	
 		setEmail(email);
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		setPinUsuario(pinUsuario);
 		idUsuario++;
-		this.puntos = 0;
+		puntos = 0;
 	}
 	//Constructor con otros datos de interes
-	public Usuario(int idUsuario, String email, String nombre, String apellidos, int pinUsuario, int puntos, String fechaNacimiento,
+	public Usuario(int idUsuario, String email, String nombre, String apellidos, int pinUsuario, String fechaNacimiento,
 			String direccion, String telefono) throws McRoyException {
 		
 		this.email = email;
@@ -48,7 +49,7 @@ public class Usuario implements IUsuario{
 		setTelefono(telefono);
 		setPinUsuario(pinUsuario);
 		idUsuario++;
-		this.puntos = 0;
+		puntos = 0;
 	}
 
 	public int getIdUsuario() {
@@ -122,12 +123,13 @@ public class Usuario implements IUsuario{
 	public int getPuntos() {
 		return puntos;
 	}
+	
 	public void setPuntos(int puntos) throws McRoyException {
 		
 		if (puntos < 0) {
 			throw new McRoyException("Puntos Insuficientes");
 		}
-		this.puntos = puntos;
+		
 	}
 	/**
 	 * Setter que comprueba que el telefono introducido tenga 9 digitos

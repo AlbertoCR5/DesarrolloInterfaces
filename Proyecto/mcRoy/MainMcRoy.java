@@ -26,17 +26,23 @@ public class MainMcRoy {
 			//Se solicita al cliente si es usuario registrado o nuevo cliente
 			boolean esUsuarioRegistrado = solicitarTipo("(1)Usuario registrado" + "\n" + "(2)Nuevo Cliente");
 			
-			if (esUsuarioRegistrado) {
-				//Se le solicita al usuario registradi el numero de usuario, como prueba, cualquier numero vale
-				usuario = new Usuario(comprobarEntero("Introduce identificador de usuario:"));
-			} else {//Si no es usuario registrado, se le solicitaran los datos
-				try {
+			try {
+				if (esUsuarioRegistrado) {
+					// Se le solicita al usuario registradi el numero de usuario, como prueba,
+					// cualquier numero vale
+
+					usuario = new Usuario(comprobarEntero("Introduce identificador de usuario:"));
+
+				} else {// Si no es usuario registrado, se le solicitaran los datos
+
 					usuario = new Usuario(solicitarString("Introduce E-mail: "), solicitarString("Introduce nombre: "),
-							solicitarString("Introduce apellidos: "));
-				} catch (McRoyException e) {
-					e.getMessage();
+							solicitarString("Introduce apellidos: "), comprobarEntero("Introduce un pin valido"));
+
 				}
+			} catch (McRoyException e) {
+				mostrarMensaje("" + e);;
 			}
+			
 			//Se le solicita al cliente si el pedido es para llevar o comer en restaurante
 			mostrarMensaje("Hola " + usuario.getNombre());
 			pedido.esParaLlevar = solicitarTipo("(1)Para LLevar" + "\n" + "(2)Comer aqui");
